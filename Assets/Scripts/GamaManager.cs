@@ -51,7 +51,7 @@ public class GamaManager : MonoBehaviour {
     private void SceneInitManagement() {
         switch (nowSceneState) {
             case SceneState.HOME:
-                playerControllerScript.init(new Vector2(5f, -5f));
+                playerControllerScript.init(new Vector2(3f, -3f));
                 break;
         }
     }

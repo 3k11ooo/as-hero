@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour {
     private void WritePlayerData() {
         playerData.PlayerPos = playerVector2;
         playerViewControllerScript.WritePlayerViewPos(playerVector2);
-        Debug.Log(playerVector2);
+        // Debug.Log(playerVector2);
     }
 
     public void PlayerMoveUp() {
