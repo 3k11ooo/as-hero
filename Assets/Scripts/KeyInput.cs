@@ -11,9 +11,10 @@ public class KeyInput : MonoBehaviour {
         if (Input.anyKey && unityEvent != null) {
 
             foreach (KeyCode code in System.Enum.GetValues(typeof(KeyCode))) {
-                if (Input.GetKeyDown(code)) {
+                if (Input.GetKey(code)) {
                     unityEvent.Invoke(code);
                 }
+                // else if (Input.GetKeyDown(code))
             }
         }
     }

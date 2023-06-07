@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
-    [SerializeField] private GameObject playerViewController;
+
+    [SerializeField] private PlayerViewController playerViewControllerScript;
+
 
     private PlayerData playerData; 
-    
-    private PlayerViewController playerViewControllerScript;
     private Vector2 playerVector2; 
 
     public PlayerData PlayerData {
@@ -15,27 +15,22 @@ public class PlayerController : MonoBehaviour {
         set { playerData = value; }
     }
 
-    private void Awake() {
-        playerData = new PlayerData();
-        playerViewControllerScript = playerViewController.GetComponent<PlayerViewController>();
-         // playerVector2 = this.playerData.PlayerPos;
-    }
-
-    public void init() {
-        // playerVector2 = playerViewControllerScript.NowPlayerPos;
-        Debug.Log(playerViewControllerScript);
+    public void init(Vector2 pos) {
+        playerData = new PlayerData(pos);
+        playerVector2 = playerData.PlayerPos;
+        playerViewControllerScript.NowPlayerPos = playerVector2;
+        playerViewControllerScript.WritePlayerViewPos(playerVector2);
         Debug.Log(playerVector2);
     }
 
     private void WritePlayerData() {
+        playerData.PlayerPos = playerVector2;
+        playerViewControllerScript.WritePlayerViewPos(playerVector2);
         Debug.Log(playerVector2);
-        // playerData.PlayerPos = playerVector2;
-        // Debug.Log(playerViewControllerScript.NowPlayerPos);
-        // playerViewControllerScript.NowPlayerPos = playerVector2;
     }
 
     public void PlayerMoveUp() {
-        Debug.Log(playerVector2);
+        // Debug.Log("up");
         playerVector2.y += 0.01f;
         WritePlayerData();
     }

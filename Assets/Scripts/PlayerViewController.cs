@@ -9,17 +9,13 @@ public class PlayerViewController : MonoBehaviour {
         get { return nowPlayerPos; }
         set { nowPlayerPos = value; }
     }
-    
-    private void Awake() {
-        LoadPlayerViewPos();
-        Debug.Log(nowPlayerPos);
-    }
 
     public void LoadPlayerViewPos() {
         nowPlayerPos = transform.position;
     }
 
-    public void WritePlayerViewPos() {
+    public void WritePlayerViewPos(Vector2 nowPos) {
+        nowPlayerPos = nowPos;
         transform.position = nowPlayerPos;
     }
 }

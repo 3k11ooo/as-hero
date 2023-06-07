@@ -10,4 +10,9 @@ public class GameData {
         get { return nowSceneState; }
         set { nowSceneState = value; }
     }
+
+    public GameData() {
+        nowGameState = GameState.GAMESTART;
+        nowSceneState = SceneState.HOME;
+    }
 }

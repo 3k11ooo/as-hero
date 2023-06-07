@@ -7,4 +7,8 @@ public class PlayerData {
         get { return playerPos; }
         set { playerPos = value; }
     }
+
+    public PlayerData (Vector2 pos) {
+        playerPos = pos;
+    }
 }

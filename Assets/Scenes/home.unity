@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &20861527 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3516365125882345245, guid: ca5019628da6d0448887ff57fbb411f3, type: 3}
+  m_PrefabInstance: {fileID: 3330033042556877613}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9934d5763b1c1d148ae2ec2eef90396a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &523036683
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,6 +144,7 @@ GameObject:
   m_Component:
   - component: {fileID: 523036686}
   - component: {fileID: 523036685}
+  - component: {fileID: 523036687}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -181,12 +193,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -1507487645, guid: f0ed58953aedfc14ca0a5b01da39c7ed, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.23, y: 0.31}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -200,57 +212,25 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 523036683}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -76, z: 0}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &974863362
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 974863364}
-  - component: {fileID: 974863363}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &974863363
+--- !u!114 &523036687
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 974863362}
+  m_GameObject: {fileID: 523036683}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16519571bacf8e94caba169c0d59fade, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &974863364
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 974863362}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 679.73114, y: 679.9818, z: -8.014888}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1035403255
 GameObject:
   m_ObjectHideFlags: 0
@@ -324,7 +304,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -402,7 +382,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keyInput: {fileID: 3701691819124748241, guid: 427f262699cdbdc4bbb4590d0d0d7fea, type: 3}
   viewController: {fileID: 9048930697453834044, guid: f11c3d3f488e5be40ac8aaac53888489, type: 3}
-  playerController: {fileID: 3426754952737706884, guid: ca5019628da6d0448887ff57fbb411f3, type: 3}
+  playerControllerScript: {fileID: 20861527}
 --- !u!4 &1218578574
 Transform:
   m_ObjectHideFlags: 0
@@ -602,6 +582,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StartUI
       objectReference: {fileID: 0}
+    - target: {fileID: 8890064279933122173, guid: 825cc7aa4e3f47d42a6c340c5108736a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 825cc7aa4e3f47d42a6c340c5108736a, type: 3}
 --- !u!1001 &3330033042556877613
@@ -618,7 +602,11 @@ PrefabInstance:
     - target: {fileID: 3516365125882345245, guid: ca5019628da6d0448887ff57fbb411f3, type: 3}
       propertyPath: playerViewController
       value: 
-      objectReference: {fileID: 974863362}
+      objectReference: {fileID: 0}
+    - target: {fileID: 3516365125882345245, guid: ca5019628da6d0448887ff57fbb411f3, type: 3}
+      propertyPath: playerViewControllerScript
+      value: 
+      objectReference: {fileID: 523036687}
     - target: {fileID: 5715219524129952801, guid: ca5019628da6d0448887ff57fbb411f3, type: 3}
       propertyPath: m_RootOrder
       value: 7

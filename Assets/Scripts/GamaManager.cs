@@ -6,32 +6,27 @@ public class GamaManager : MonoBehaviour {
     //  参照しましょう
     [SerializeField] private GameObject keyInput; 
     [SerializeField] private GameObject viewController;
-    [SerializeField] private GameObject playerController;
+    [SerializeField] private PlayerController playerControllerScript;
+
 
 
     private GameData gameData = new GameData();
-    private SceneState sceneState = new SceneState();
+    private SceneManager sceneManager = new SceneManager();
     private GameState nowGameState;
-    private PlayerController playerControllerScript;
-    
-    
-
-
+    private SceneState nowSceneState;
 
     private void Awake() {
         DontDestroyOnLoad(this);
-        Debug.Log(gameData.NowGameState);
         nowGameState = gameData.NowGameState;
-        playerControllerScript = playerController.GetComponent<PlayerController>();
-        playerControllerScript.init();
+        nowSceneState = gameData.NowSceneState;
+        SceneInitManagement();
     }
 
 
     public void GetKeyInput(KeyCode code) {
-        Debug.Log(playerControllerScript);
         // 管理
         // Debug.Log(code);
-        // Debug.Log(playerControllerScript.PlayerData.PlayerPos);
+        
         switch (code) {
             case KeyCode.Space:
                 // viewController.SwitchScene(sceneState+1);
@@ -51,6 +46,17 @@ public class GamaManager : MonoBehaviour {
             default:
                 break;
         }
-        
+    }
+
+    private void SceneInitManagement() {
+        switch (nowSceneState) {
+            case SceneState.HOME:
+                playerControllerScript.init(new Vector2(5f, -5f));
+                break;
+        }
+    }
+
+    private void StateManage () {
+
     }
 }
