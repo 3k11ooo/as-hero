@@ -7,37 +7,12 @@ public class KeyInput : MonoBehaviour {
     public UnityEvent<KeyCode> unityEvent = new UnityEvent<KeyCode>();
     private bool keyDown = false;
     private KeyCode nowKeyDownCode;
-    private GameState nowGameState; 
 
     public bool KeyDown {
         get { return keyDown; }
         set { keyDown = value; } 
     } 
-
-    public GameState NowGameState {
-        get { return nowGameState; }
-        set { nowGameState = value; }
-    }   
-
-
-
     private void Update() {
-        switch (nowGameState) {
-            case GameState.GAMESTART:
-                ChangeTextData();
-                break;
-            case GameState.INGAME_WALK:
-                PlayerMoveKeyInput();
-                break;
-            case GameState.INGAME_TRADE:
-                ChangeTextData();
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void PlayerMoveKeyInput() {
         if (Input.anyKey && unityEvent != null) {
             foreach (KeyCode code in System.Enum.GetValues(typeof(KeyCode))) {
                 // 入力されているか
@@ -67,17 +42,6 @@ public class KeyInput : MonoBehaviour {
 
         if (keyDown == true && nowKeyDownCode != KeyCode.None) {
             unityEvent.Invoke(nowKeyDownCode);
-        }
-    }
-
-    private void ChangeTextData() {
-        if(Input.GetKeyDown(KeyCode.Space) && unityEvent != null) {
-            unityEvent.Invoke(KeyCode.Space);
-        }
-    }
-    private void ChangeSceneState() {
-        if(Input.GetKeyDown(KeyCode.Space) && unityEvent != null) {
-            unityEvent.Invoke(KeyCode.Space);
         }
     }
 }   

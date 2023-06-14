@@ -10,10 +10,6 @@ public class PlayerController : MonoBehaviour {
     private PlayerData playerData; 
     private Vector2 playerVector2; 
 
-    public PlayerData PlayerData {
-        get { return playerData; }
-        set { playerData = value; }
-    }
 
     public void init(Vector2 pos) {
         playerData = new PlayerData(pos);
@@ -31,25 +27,33 @@ public class PlayerController : MonoBehaviour {
 
     public void PlayerMoveUp() {
         // Debug.Log("up");
-        playerVector2.y += 0.01f;
+        if (playerVector2.y < 4.65f) {
+            playerVector2.y += 0.005f;
+        }
         WritePlayerData();
     }
     
     public void PlayerMoveLeft() {
         // Debug.Log("left");
-        playerVector2.x -= 0.01f;
+        if (playerVector2.x > -6.4f) {
+            playerVector2.x -= 0.005f;
+        }
         WritePlayerData();
     }
 
     public void PlayerMoveDown() {
         // Debug.Log("down");
-        playerVector2.y -= 0.01f;
+        if (playerVector2.y > -4.65f) {
+            playerVector2.y -= 0.005f;
+        }
         WritePlayerData();
     }
 
     public void PlayerMoveRight() {
         // Debug.Log("right");
-        playerVector2.x += 0.01f;   
+        if (playerVector2.x < 6.4f) {
+            playerVector2.x += 0.005f;
+        }  
         WritePlayerData();     
     }
 }
