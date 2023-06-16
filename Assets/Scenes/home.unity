@@ -4216,6 +4216,34 @@ PrefabInstance:
       propertyPath: tradingViewControllerScript
       value: 
       objectReference: {fileID: 188198358}
+    - target: {fileID: 4922773304537336365, guid: 22e2e603669284f19b689d0d2d64d1a9, type: 3}
+      propertyPath: endTrade.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4922773304537336365, guid: 22e2e603669284f19b689d0d2d64d1a9, type: 3}
+      propertyPath: endTrade.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4922773304537336365, guid: 22e2e603669284f19b689d0d2d64d1a9, type: 3}
+      propertyPath: endTrade.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1218578573}
+    - target: {fileID: 4922773304537336365, guid: 22e2e603669284f19b689d0d2d64d1a9, type: 3}
+      propertyPath: endTrade.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4922773304537336365, guid: 22e2e603669284f19b689d0d2d64d1a9, type: 3}
+      propertyPath: endTrade.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: EndTrade
+      objectReference: {fileID: 0}
+    - target: {fileID: 4922773304537336365, guid: 22e2e603669284f19b689d0d2d64d1a9, type: 3}
+      propertyPath: endTrade.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GamaManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4922773304537336365, guid: 22e2e603669284f19b689d0d2d64d1a9, type: 3}
+      propertyPath: endTrade.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4922773304537336370, guid: 22e2e603669284f19b689d0d2d64d1a9, type: 3}
       propertyPath: m_Name
       value: TradeManager

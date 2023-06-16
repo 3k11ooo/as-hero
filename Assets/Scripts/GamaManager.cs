@@ -46,6 +46,7 @@ public class GamaManager : MonoBehaviour {
                 keyInputManager.Walk(code);
                 break;
             case GameState.INGAME_TRADE :
+                keyInputManager.Trade(code);
                 break;
             case GameState.INGAME_TALK :
                 break;
@@ -124,6 +125,7 @@ public class GamaManager : MonoBehaviour {
             keyInputManagerEvent = null;
         }
     }
+    // event invoke
     private void KeyInputManageByState(KeyCode code) {
         switch(gameData.NowGameState) {
             case GameState.GAMESTART :
@@ -133,7 +135,9 @@ public class GamaManager : MonoBehaviour {
                 PlayerMoveController(code);
                 break;
             case GameState.INGAME_TRADE :
-                tradeManagerScript.PlayerTradeController(code);
+                if (isOnce == false) {
+                    StartCoroutine( TradeInput(code) ); 
+                }
                 break;
             case GameState.INGAME_TALK :
                 break;
@@ -176,18 +180,19 @@ public class GamaManager : MonoBehaviour {
         }
     }
     // turn end input
-    private void TurnManage() {
+    private void OnceInput() {
         if (isOnce == false) {
-            turnCount++;
             isOnce = true;
-            uiManagerScript.TurnEndViewControl(true);
         }
     }
-
     IEnumerator TurnEnd() {
         //終わるまで待ってほしい処理を書く
         StateManage(GameState.INGAME_TURNEND);
-        TurnManage();
+        OnceInput();
+        turnCount++;
+        uiManagerScript.TurnEndViewControl(true);
+        tradeManagerScript.ChangeReturnRate();
+        tradeManagerScript.ChangePlayerHold();
     
         //3秒待つ
         yield return new WaitForSeconds(3);
@@ -197,4 +202,18 @@ public class GamaManager : MonoBehaviour {
         StateManage(GameState.INGAME_WALK);
         uiManagerScript.TurnEndViewControl(false);
     } 
+
+    // trade input
+    IEnumerator TradeInput(KeyCode code) {
+        // wait by end
+        OnceInput();
+        yield return new WaitForSeconds(0.5f);
+
+        // do after wait
+        isOnce = false;
+        tradeManagerScript.PlayerTradeController(code);
+    }
+    public void EndTrade() {
+        StateManage(GameState.INGAME_WALK);
+    }
 }
