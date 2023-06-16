@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour {
     public void PlayerMoveUp() {
         // Debug.Log("up");
         if (playerVector2.y < 4.65f) {
-            playerVector2.y += 0.01f;
+            playerVector2.y += 0.1f;
         }
         WritePlayerData();
     }
@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour {
     public void PlayerMoveLeft() {
         // Debug.Log("left");
         if (playerVector2.x > -6.4f) {
-            playerVector2.x -= 0.01f;
+            playerVector2.x -= 0.1f;
         }
         WritePlayerData();
     }
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour {
     public void PlayerMoveDown() {
         // Debug.Log("down");
         if (playerVector2.y > -4.65f) {
-            playerVector2.y -= 0.01f;
+            playerVector2.y -= 0.1f;
         }
         WritePlayerData();
     }
@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour {
     public void PlayerMoveRight() {
         // Debug.Log("right");
         if (playerVector2.x < 6.4f) {
-            playerVector2.x += 0.01f;
+            playerVector2.x += 0.1f;
         }  
         WritePlayerData();     
     }
