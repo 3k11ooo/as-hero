@@ -23,6 +23,9 @@ public class GamaManager : MonoBehaviour {
     private bool overlap;
     private bool isOnce = false;
     private int turnCount = 0;
+    private string[] playerHoldArray;
+    private string[] playerHoldNameArray;
+
 
     private void Awake() {
         DontDestroyOnLoad(this);
@@ -32,6 +35,8 @@ public class GamaManager : MonoBehaviour {
         StateManage(GameState.GAMESTART);
         SubscribeToEvent(keyInputManagerEvent);
         keyInputManager.initKeyInputManager();
+        ChangePlayerAssetData();
+        tradeManagerScript.ChangeReturnRate();
     }
 
     // update
@@ -83,6 +88,13 @@ public class GamaManager : MonoBehaviour {
     // 取引の画面管理
     private void initTradeTextData() {
         tradeManagerScript.init();
+    }
+    // 
+    private void ChangePlayerAssetData() {
+        tradeManagerScript.ChangeViewData();
+        playerHoldArray = tradeManagerScript.GetAssetHold();
+        playerHoldNameArray = tradeManagerScript.GetAssetName();
+        uiManagerScript.AssetViewControl(playerHoldArray, playerHoldNameArray);
     }
 
     // playerとオブジェクトの重なり判定
@@ -179,12 +191,12 @@ public class GamaManager : MonoBehaviour {
                 break;
         }
     }
-    // turn end input
     private void OnceInput() {
         if (isOnce == false) {
             isOnce = true;
         }
     }
+    // turn end input
     IEnumerator TurnEnd() {
         //終わるまで待ってほしい処理を書く
         StateManage(GameState.INGAME_TURNEND);
@@ -193,6 +205,7 @@ public class GamaManager : MonoBehaviour {
         uiManagerScript.TurnEndViewControl(true);
         tradeManagerScript.ChangeReturnRate();
         tradeManagerScript.ChangePlayerHold();
+        ChangePlayerAssetData();
     
         //3秒待つ
         yield return new WaitForSeconds(3);
@@ -203,7 +216,7 @@ public class GamaManager : MonoBehaviour {
         uiManagerScript.TurnEndViewControl(false);
     } 
 
-    // trade input
+    // trade input event
     IEnumerator TradeInput(KeyCode code) {
         // wait by end
         OnceInput();
@@ -214,6 +227,7 @@ public class GamaManager : MonoBehaviour {
         tradeManagerScript.PlayerTradeController(code);
     }
     public void EndTrade() {
+        ChangePlayerAssetData();
         StateManage(GameState.INGAME_WALK);
     }
 }

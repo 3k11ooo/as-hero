@@ -9,6 +9,7 @@ public class TradeManager : MonoBehaviour {
         SELECT,
         BUY,
         SELL,
+        ERROR,
         END,
     }
     enum AssetState {
@@ -35,6 +36,14 @@ public class TradeManager : MonoBehaviour {
     private string nowFxRate = "";
     private string nowSaveRate = "";
     private string beforeLoadFileName = "";
+    private TradeState beforeTradeState;
+    private string nowPlayerHold = "0";
+    private string nowStableReturn = "0";
+    private string nowActiveReturn = "0";
+    private string nowFxReturn = "0";
+    private string nowSaveReturn = "0";
+
+
 
     private int textNum;
 
@@ -42,28 +51,27 @@ public class TradeManager : MonoBehaviour {
         loadText = (Resources.Load(loadFileName, typeof(TextAsset)) as TextAsset).text;
         switch (loadFileName) {
             case "stableAssetText":
-                loadText = loadText.Replace("rate", nowStableRate);
+                loadText = loadText.Replace("rate", ConvertToFullWidth(nowStableRate));
                 break;
             case "activeAssetText":
-                loadText = loadText.Replace("rate", nowActiveRate);
+                loadText = loadText.Replace("rate", ConvertToFullWidth(nowActiveRate));
                 break;
             case "fxAssetText":
-                loadText = loadText.Replace("rate", nowFxRate);
+                loadText = loadText.Replace("rate", ConvertToFullWidth(nowFxRate));
                 break;
             case "savingAssetText":
-                loadText = loadText.Replace("rate", nowSaveRate);
+                loadText = loadText.Replace("rate", ConvertToFullWidth(nowSaveRate));
                 break;
             default :
                 break;
         }
         tradingViewControllerScript.ChangeViewText(loadText);
-        Debug.Log(assetState + " : " + tradeState);
     }
 
     public void init() {
         tradeState = TradeState.SELECT;
         assetState = AssetState.NONE;
-        ChangeReturnRate();
+        playerAssetData.PlayerHold = 1000f;
         LoadTextData("tradeBrand");
     }
     // NOTE:  update
@@ -78,22 +86,27 @@ public class TradeManager : MonoBehaviour {
             SelectPrice(code);
         }
         else if (tradeState == TradeState.END && code == KeyCode.Escape) {
+            ChangeViewData();
             endTrade.Invoke();
+            init();
+        }
+        else if (tradeState == TradeState.ERROR && code == KeyCode.Space) {
+            ErrorControl();
         }
     }
 
     public void ChangeReturnRate() {
         nowStableRate = stableAsset.CalReturnRate();
         nowActiveRate = activeAsset.CalReturnRate();
-        nowActiveRate = fxAsset.CalReturnRate();
+        nowFxRate = fxAsset.CalReturnRate();
         nowSaveRate = savingAsset.CalReturnRate();
-
     }
     public void ChangePlayerHold() {
-        stableAsset.CalReturn(playerAssetData.StableAsset);
-        activeAsset.CalReturn(playerAssetData.ActiveAsset);
-        fxAsset.CalReturn(playerAssetData.FxAsset);
-        savingAsset.CalReturn(playerAssetData.SavingAsset);
+        playerAssetData.PlayerHold += 1000f;
+        playerAssetData.StableAsset += stableAsset.CalReturn(playerAssetData.StableAsset);
+        playerAssetData.ActiveAsset += activeAsset.CalReturn(playerAssetData.ActiveAsset);
+        playerAssetData.FxAsset += fxAsset.CalReturn(playerAssetData.FxAsset);
+        playerAssetData.SavingAsset += savingAsset.CalReturn(playerAssetData.SavingAsset);
     }
 
     private void SelectAsset(KeyCode code) { // none
@@ -117,6 +130,9 @@ public class TradeManager : MonoBehaviour {
                 LoadTextData("savingAssetText");
                 assetState = AssetState.SAVE;
                 beforeLoadFileName = "savingAssetText";
+                break;
+            case KeyCode.Escape:
+                endTrade.Invoke();
                 break;
             default:
                 break;
@@ -163,43 +179,107 @@ public class TradeManager : MonoBehaviour {
         if (tradeState == TradeState.BUY) {
             switch (assetState) {
                 case AssetState.STABLE:
-                    playerAssetData.StableAsset += amount;
+                    playerAssetData.StableAsset = CalAssetTrade(playerAssetData.StableAsset, amount);
                     break;
                 case AssetState.ACTIVE:
-                    playerAssetData.ActiveAsset += amount;
+                    playerAssetData.ActiveAsset = CalAssetTrade(playerAssetData.ActiveAsset, amount);
                     break;
                 case AssetState.FX:
-                    playerAssetData.FxAsset += amount;
+                    playerAssetData.FxAsset = CalAssetTrade(playerAssetData.FxAsset, amount);
                     break;
                 case AssetState.SAVE:
-                    playerAssetData.SavingAsset += amount;
+                    playerAssetData.SavingAsset = CalAssetTrade(playerAssetData.SavingAsset, amount);
                     break;
                 default:
                     break;
             }
-            tradeState = TradeState.END;
         }
         else if (tradeState == TradeState.SELL) {
             switch (assetState) {
                 case AssetState.STABLE:
-                    playerAssetData.StableAsset -= amount;
+                    playerAssetData.StableAsset = CalAssetTrade(playerAssetData.StableAsset, -amount);
                     break;
                 case AssetState.ACTIVE:
-                    playerAssetData.ActiveAsset -= amount;
+                    playerAssetData.ActiveAsset = CalAssetTrade(playerAssetData.ActiveAsset, -amount);
                     break;
                 case AssetState.FX:
-                    playerAssetData.FxAsset -= amount;
+                    playerAssetData.FxAsset = CalAssetTrade(playerAssetData.FxAsset, -amount);
                     break;
                 case AssetState.SAVE:
-                    playerAssetData.SavingAsset -= amount;
+                    playerAssetData.SavingAsset = CalAssetTrade(playerAssetData.SavingAsset, -amount);
                     break;
                 default:
                     break;
             }
-            tradeState = TradeState.END;
         }
     }
+    private float CalAssetTrade(float assetHold, float tradeAmount) {
+        if (tradeAmount < 0 && -tradeAmount > assetHold ) {
+            ErrorControl();
+            return assetHold;
+        }
+        else if (tradeAmount < 0 && playerAssetData.PlayerHold < tradeAmount) {
+            ErrorControl();
+            return assetHold;
+        }
+        else {
+            playerAssetData.PlayerHold -= tradeAmount;
+            LoadTextData("endTradeText");
+            tradeState = TradeState.END;
+            return assetHold + tradeAmount;
+        }
+    }
+    private void ErrorControl() {
+        if (tradeState != TradeState.ERROR) {
+            tradingViewControllerScript.ViewErrorText(true);
+            beforeTradeState = tradeState;
+            tradeState = TradeState.ERROR;
+        }
+        else {
+            tradingViewControllerScript.ViewErrorText(false);
+            tradeState =  beforeTradeState;
+            LoadTextData("selectAssetPrice");
+        }
 
+    }
+    public void ChangeViewData() {
+        nowPlayerHold = playerAssetData.PlayerHold.ToString("#;-#;0");
+        nowStableReturn = playerAssetData.StableAsset.ToString("#.##;{#.##;0");
+        nowActiveReturn = playerAssetData.ActiveAsset.ToString("#.##;{#.##;0");
+        nowFxReturn = playerAssetData.FxAsset.ToString("#.##;{#.##;0");
+        nowSaveReturn = playerAssetData.SavingAsset.ToString("#.##;{#.##;0");
+    }
+
+    public string[] GetAssetName() {
+        string[] strArray = new string[5] {
+            "てもち",
+            "あんていかぶ",
+            "アクテイブかぶ",
+            "かわせ",
+            "よきん",
+        };
+        return strArray;
+    }
+    public string[] GetAssetHold() {
+        string[] strArray = new string[5] {
+            nowPlayerHold,
+            nowStableReturn,
+            nowActiveReturn,
+            nowFxReturn,
+            nowSaveReturn,
+        };
+        return strArray;
+    }
+
+
+    const int ConvertionConstant = 65248;
+    static public string ConvertToFullWidth(string halfWidthStr) {
+        string fullWidthStr = null;
+        for (int i = 0; i < halfWidthStr.Length; i++) {
+            fullWidthStr += (char)(halfWidthStr[i] + ConvertionConstant);
+        }
+        return fullWidthStr;
+    }
 
     // IEnumerator Trade() {
     //     //終わるまで待ってほしい処理を書く

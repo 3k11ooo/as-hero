@@ -3,16 +3,16 @@ public class GameData {
     private SceneState nowSceneState;
     private TurnCount nowTurnCount;
     private string[] turnData = {
-        "いち　ねんめ",
-        "に　ねんめ",
-        "さん　ねんめ",
-        "よ　ねんめ",
-        "ご　ねんめ",
-        "ろく　ねんめ",
-        "なな　ねんめ",
-        "はち　ねんめ",
-        "きゅう　ねんめ",
-        "じゅう　ねんめ",
+        "１ねんめ",
+        "２ねんめ",
+        "３ねんめ",
+        "４ねんめ",
+        "５ねんめ",
+        "６ねんめ",
+        "７ねんめ",
+        "８ねんめ",
+        "９ねんめ",
+        "１０ねんめ",
     };
 
     public GameState NowGameState {

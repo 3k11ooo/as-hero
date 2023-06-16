@@ -8,13 +8,14 @@ public class StableAssetData : AssetData {
     }
     public float CalReturn (float playerHold) {
         playerHold += GetPlayerReturn(playerHold, returnRate);
-        Debug.Log(GetName() + "player return : " + playerHold);
         return playerHold;
     }
     public string CalReturnRate() {
         returnRate = GetReturnRate(returnRate);
         // Debug.Log(GetName() + "return rate : " + returnRate);
-        return returnRate.ToString("f1");
+        float num = returnRate * 100;
+        return num.ToString("#.##;{#.##;0");
+
     }
 
 }

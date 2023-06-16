@@ -24,7 +24,7 @@ public class KeyInputManager : MonoBehaviour  {
         }
     }
     public void Trade(KeyCode code) {
-        if (code == KeyCode.Alpha1 || code == KeyCode.Alpha2 || code == KeyCode.Alpha3 || code == KeyCode.Alpha4 || code == KeyCode.Escape) {
+        if (code == KeyCode.Alpha1 || code == KeyCode.Alpha2 || code == KeyCode.Alpha3 || code == KeyCode.Alpha4 || code == KeyCode.Escape || code == KeyCode.Space) {
             GameStartEvent.Invoke(code);
         }
     }

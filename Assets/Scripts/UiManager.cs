@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Text.RegularExpressions;
 
 public class UiManager : MonoBehaviour {
     [SerializeField] private Canvas _startUi;
@@ -9,6 +10,7 @@ public class UiManager : MonoBehaviour {
     [SerializeField] private Canvas _turnEndUi;
     [SerializeField] private TMPro.TMP_Text inGameText;
     [SerializeField] private TMPro.TMP_Text turnText;
+    [SerializeField] private TMPro.TMP_Text playerHold;
 
 
         // UI管理
@@ -70,6 +72,16 @@ public class UiManager : MonoBehaviour {
     public void TurnViewController(int count,  string[] turnData) {
         turnText.SetText(turnData[count]);
     }
+    // asset manage
+    public void AssetViewControl(string[] assetData, string[] assetName) {
+        string fullWidthStr = "";
+        for (int i=0; i<assetData.Length; i++) {
+            fullWidthStr += (assetName[i] + "ーー");
+            fullWidthStr += ConvertToFullWidth(assetData[i]);
+            fullWidthStr += "\n";
+        }
+        playerHold.SetText(fullWidthStr);
+    }
 
     public void TurnEndViewControl(bool turnEnd) {
         if (turnEnd == true) {
@@ -82,5 +94,19 @@ public class UiManager : MonoBehaviour {
             _turnUi.enabled = true;
             _turnEndUi.enabled = false;
         }
+    }
+
+    const int ConvertionConstant = 65248;
+
+    static public string ConvertToFullWidth(string halfWidthStr)
+    {
+        string fullWidthStr = null;
+
+        for (int i = 0; i < halfWidthStr.Length; i++)
+        {
+            fullWidthStr += (char)(halfWidthStr[i] + ConvertionConstant);
+        }
+
+        return fullWidthStr;
     }
 }

@@ -35,7 +35,7 @@ public abstract class AssetData {
             case Asset.SAVING:
                 this.returnRange = new float[2]{
                     0.001f,
-                    0.001f
+                    0.0001f
                 };
                 break;
             default:
@@ -46,8 +46,8 @@ public abstract class AssetData {
     // public abstract void CalReturnRate();
 
     public float GetReturnRate(float beforeRate) {
-        int rand = Random.Range(1, 0);
-        if (rand == 0) {
+        int rand = Random.Range(10, 1);
+        if (rand%2 == 0) {
             float returnRate = Random.Range(returnRange[0], beforeRate);
             return returnRate;
         }
