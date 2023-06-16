@@ -17,6 +17,9 @@ public class KeyInputManager : MonoBehaviour  {
             GameStartEvent.Invoke(code);
             count++;
         }
+        else if (code == KeyCode.Escape) {
+            GameStartEvent.Invoke(code);
+        }
     }
     public void Walk(KeyCode code) {
         if (code == KeyCode.W || code == KeyCode.A || code == KeyCode.S || code == KeyCode.D || code == KeyCode.Space) {
@@ -25,6 +28,11 @@ public class KeyInputManager : MonoBehaviour  {
     }
     public void Trade(KeyCode code) {
         if (code == KeyCode.Alpha1 || code == KeyCode.Alpha2 || code == KeyCode.Alpha3 || code == KeyCode.Alpha4 || code == KeyCode.Escape || code == KeyCode.Space) {
+            GameStartEvent.Invoke(code);
+        }
+    }
+    public void EndGame(KeyCode code) {
+        if (code == KeyCode.Space) {
             GameStartEvent.Invoke(code);
         }
     }

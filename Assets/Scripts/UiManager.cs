@@ -8,6 +8,7 @@ public class UiManager : MonoBehaviour {
     [SerializeField] private Canvas _inGameUi;
     [SerializeField] private Canvas _turnUi;
     [SerializeField] private Canvas _turnEndUi;
+    [SerializeField] private Canvas _endingUi;
     [SerializeField] private TMPro.TMP_Text inGameText;
     [SerializeField] private TMPro.TMP_Text turnText;
     [SerializeField] private TMPro.TMP_Text playerHold;
@@ -23,6 +24,7 @@ public class UiManager : MonoBehaviour {
                 _inGameUi.enabled = false;
                 _turnUi.enabled = false;
                 _turnEndUi.enabled = false;
+                _endingUi.enabled = false;
                 break;
             case GameState.INGAME_WALK :
                 _startUi.enabled = false;
@@ -44,6 +46,7 @@ public class UiManager : MonoBehaviour {
                 _startUi.enabled = false;
                 _talkUi.enabled = false;
                 _tradeUi.enabled = false;
+                _endingUi.enabled = true;
                 break;
             case GameState.PAUSE :
                 _startUi.enabled = false;

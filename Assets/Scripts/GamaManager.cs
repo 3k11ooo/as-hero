@@ -13,6 +13,7 @@ public class GamaManager : MonoBehaviour {
     [SerializeField] private TradeManager tradeManagerScript;
     [SerializeField] private KeyInputManager keyInputManager;
     [SerializeField] private KeyInputManager keyInputManagerEvent;
+    [SerializeField] private EndingManager endingManagerScript;
     [SerializeField] private UiManager uiManagerScript;
     [SerializeField] private Tilemap tilemap;
 
@@ -56,6 +57,7 @@ public class GamaManager : MonoBehaviour {
             case GameState.INGAME_TALK :
                 break;
             case GameState.GAMEENDING :
+                keyInputManager.EndGame(code);
                 break;
             case GameState.PAUSE :
                 break;
@@ -81,7 +83,6 @@ public class GamaManager : MonoBehaviour {
     private void StateManage(GameState nextState) {
         gameData.NowGameState = nextState;
         uiManagerScript.ManageUI(gameData.NowGameState);
-        uiManagerScript.TurnViewController(turnCount, gameData.TurnData);
         Debug.Log(gameData.NowGameState);
     }
 
@@ -134,14 +135,13 @@ public class GamaManager : MonoBehaviour {
         Debug.Log("Unsubscribed");
         if (keyInputManagerEvent != null) {
             keyInputManagerEvent.GameStartEvent.RemoveListener(KeyInputManageByState);
-            keyInputManagerEvent = null;
         }
     }
     // event invoke
     private void KeyInputManageByState(KeyCode code) {
         switch(gameData.NowGameState) {
             case GameState.GAMESTART :
-                StateManage(GameState.INGAME_WALK);
+                StartOrQuit(code);
                 break;
             case GameState.INGAME_WALK :
                 PlayerMoveController(code);
@@ -154,6 +154,9 @@ public class GamaManager : MonoBehaviour {
             case GameState.INGAME_TALK :
                 break;
             case GameState.GAMEENDING :
+                if (isOnce == false) {
+                    StartCoroutine("ResetGame"); 
+                }
                 break;
             case GameState.PAUSE :
                 break;
@@ -161,6 +164,21 @@ public class GamaManager : MonoBehaviour {
                 break; 
             default:
                 break;
+        }
+    }
+
+    // start or quit
+    private void StartOrQuit(KeyCode code) {
+        switch (code) {
+            case KeyCode.Space:
+                StateManage(GameState.INGAME_WALK);
+                break;
+            case KeyCode.Escape:
+                Application.Quit();
+                break;
+            default:
+                break;
+
         }
     }
 
@@ -201,7 +219,6 @@ public class GamaManager : MonoBehaviour {
         //終わるまで待ってほしい処理を書く
         StateManage(GameState.INGAME_TURNEND);
         OnceInput();
-        turnCount++;
         uiManagerScript.TurnEndViewControl(true);
         tradeManagerScript.ChangeReturnRate();
         tradeManagerScript.ChangePlayerHold();
@@ -212,8 +229,17 @@ public class GamaManager : MonoBehaviour {
     
         //再開してから実行したい処理を書く
         isOnce = false;
-        StateManage(GameState.INGAME_WALK);
-        uiManagerScript.TurnEndViewControl(false);
+        turnCount++;
+        if (turnCount > gameData.MaxCount) {
+            StateManage(GameState.GAMEENDING);
+            // ending manager の loadText 起動
+            endingManagerScript.ChangeResultTextData(tradeManagerScript.SumResult);
+        }
+        else {
+            StateManage(GameState.INGAME_WALK);
+            uiManagerScript.TurnViewController(turnCount, gameData.TurnData);
+            uiManagerScript.TurnEndViewControl(false);
+        }
     } 
 
     // trade input event
@@ -229,5 +255,25 @@ public class GamaManager : MonoBehaviour {
     public void EndTrade() {
         ChangePlayerAssetData();
         StateManage(GameState.INGAME_WALK);
+    }
+
+    // ending
+    IEnumerator ResetGame() {
+        isOnce = true;
+        UnsubscribeFromEvent();
+        tradeManagerScript.ResetData();
+
+        yield return new WaitForSeconds(1.0f);
+
+        isOnce = false;
+        turnCount = 0;
+        SceneInitManagement();
+        initTradeTextData();
+        StateManage(GameState.GAMESTART);
+        SubscribeToEvent(keyInputManagerEvent);
+        keyInputManager.initKeyInputManager();
+        ChangePlayerAssetData();
+        tradeManagerScript.ChangeReturnRate();
+        uiManagerScript.TurnViewController(turnCount, gameData.TurnData);
     }
 }

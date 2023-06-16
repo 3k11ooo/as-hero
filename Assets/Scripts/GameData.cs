@@ -2,6 +2,7 @@ public class GameData {
     private GameState nowGameState;
     private SceneState nowSceneState;
     private TurnCount nowTurnCount;
+    private int maxCount = 9;
     private string[] turnData = {
         "１ねんめ",
         "２ねんめ",
@@ -31,10 +32,12 @@ public class GameData {
         get { return turnData; }
         set { turnData = value; }
     }
+    public int MaxCount {
+        get { return maxCount; }
+    }
 
     public GameData() {
         nowGameState = GameState.GAMESTART;
         nowSceneState = SceneState.HOME;
-        nowTurnCount = TurnCount.いちねんめ;
     }
 }

@@ -4,6 +4,7 @@ public class PlayerAssetData {
     private float activeAsset;
     private float fxAsset;
     private float savingAsset;
+    private float sumAsset;
 
     public float PlayerHold {
         get { return playerHold; }
@@ -25,6 +26,12 @@ public class PlayerAssetData {
         get { return savingAsset; }
         set { savingAsset = value; }
     }
+    public float SumAsset {
+        get { return sumAsset; }
+        set { sumAsset = value; }
+    }
 
-
+    public PlayerAssetData() {
+        playerHold = 1000f;
+    }
 }

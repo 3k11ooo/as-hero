@@ -17,19 +17,19 @@ public abstract class AssetData {
             case Asset.STABLE:
                 this.returnRange = new float[2]{
                     0.3f,
-                    -0.06f
+                    -0.3f
                 };
                 break;
             case Asset.ACTIVE:
                 this.returnRange = new float[2]{
                     1.0f,
-                    -0.2f
+                    -1.0f
                 };
                 break;
             case Asset.FX:
                 this.returnRange = new float[2]{
                     3.0f,
-                    -1.0f
+                    -3.0f
                 };
                 break;
             case Asset.SAVING:

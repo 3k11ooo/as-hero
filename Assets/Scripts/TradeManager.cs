@@ -71,7 +71,6 @@ public class TradeManager : MonoBehaviour {
     public void init() {
         tradeState = TradeState.SELECT;
         assetState = AssetState.NONE;
-        playerAssetData.PlayerHold = 1000f;
         LoadTextData("tradeBrand");
     }
     // NOTE:  update
@@ -85,7 +84,7 @@ public class TradeManager : MonoBehaviour {
         else if (tradeState == TradeState.BUY || tradeState == TradeState.SELL) {
             SelectPrice(code);
         }
-        else if (tradeState == TradeState.END && code == KeyCode.Escape) {
+        else if (tradeState == TradeState.END && code == KeyCode.Space) {
             ChangeViewData();
             endTrade.Invoke();
             init();
@@ -103,10 +102,11 @@ public class TradeManager : MonoBehaviour {
     }
     public void ChangePlayerHold() {
         playerAssetData.PlayerHold += 1000f;
-        playerAssetData.StableAsset += stableAsset.CalReturn(playerAssetData.StableAsset);
-        playerAssetData.ActiveAsset += activeAsset.CalReturn(playerAssetData.ActiveAsset);
-        playerAssetData.FxAsset += fxAsset.CalReturn(playerAssetData.FxAsset);
-        playerAssetData.SavingAsset += savingAsset.CalReturn(playerAssetData.SavingAsset);
+        playerAssetData.StableAsset = stableAsset.CalReturn(playerAssetData.StableAsset);
+        playerAssetData.ActiveAsset = activeAsset.CalReturn(playerAssetData.ActiveAsset);
+        playerAssetData.FxAsset = fxAsset.CalReturn(playerAssetData.FxAsset);
+        playerAssetData.SavingAsset = savingAsset.CalReturn(playerAssetData.SavingAsset);
+        playerAssetData.SumAsset = playerAssetData.PlayerHold + playerAssetData.StableAsset + playerAssetData.ActiveAsset + playerAssetData.FxAsset + playerAssetData.SavingAsset;
     }
 
     private void SelectAsset(KeyCode code) { // none
@@ -281,6 +281,17 @@ public class TradeManager : MonoBehaviour {
         return fullWidthStr;
     }
 
+    public float SumResult {
+        get { return playerAssetData.SumAsset; }
+    }
+
+    public void ResetData() {
+        playerAssetData.PlayerHold = 0f;
+        playerAssetData.StableAsset = 0f;
+        playerAssetData.ActiveAsset = 0f;
+        playerAssetData.FxAsset = 0f;
+        playerAssetData.SavingAsset = 0f;
+    }
     // IEnumerator Trade() {
     //     //終わるまで待ってほしい処理を書く
 
