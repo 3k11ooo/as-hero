@@ -1,6 +1,5 @@
 using UnityEngine;
 public class KeyInputWalk : KeyInputMapper {
-    private KeyCode nowKeyDownCode = KeyCode.None;
 
     public override void KeyManaged(KeyCode code) {
         Debug.Log("walk!");

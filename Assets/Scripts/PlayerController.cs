@@ -10,13 +10,16 @@ public class PlayerController : MonoBehaviour {
     private PlayerData playerData; 
     private Vector2 playerVector2; 
 
+    public PlayerData PlayerData {
+        get { return playerData; }
+        set { playerData = value; }
+    }
 
     public void init(Vector2 pos) {
         playerData = new PlayerData(pos);
         playerVector2 = playerData.PlayerPos;
         playerViewControllerScript.NowPlayerPos = playerVector2;
         playerViewControllerScript.WritePlayerViewPos(playerVector2);
-        Debug.Log(playerVector2);
     }
 
     private void WritePlayerData() {
@@ -28,7 +31,7 @@ public class PlayerController : MonoBehaviour {
     public void PlayerMoveUp() {
         // Debug.Log("up");
         if (playerVector2.y < 4.65f) {
-            playerVector2.y += 0.005f;
+            playerVector2.y += 0.01f;
         }
         WritePlayerData();
     }
@@ -36,7 +39,7 @@ public class PlayerController : MonoBehaviour {
     public void PlayerMoveLeft() {
         // Debug.Log("left");
         if (playerVector2.x > -6.4f) {
-            playerVector2.x -= 0.005f;
+            playerVector2.x -= 0.01f;
         }
         WritePlayerData();
     }
@@ -44,7 +47,7 @@ public class PlayerController : MonoBehaviour {
     public void PlayerMoveDown() {
         // Debug.Log("down");
         if (playerVector2.y > -4.65f) {
-            playerVector2.y -= 0.005f;
+            playerVector2.y -= 0.01f;
         }
         WritePlayerData();
     }
@@ -52,7 +55,7 @@ public class PlayerController : MonoBehaviour {
     public void PlayerMoveRight() {
         // Debug.Log("right");
         if (playerVector2.x < 6.4f) {
-            playerVector2.x += 0.005f;
+            playerVector2.x += 0.01f;
         }  
         WritePlayerData();     
     }

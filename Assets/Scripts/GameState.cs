@@ -3,6 +3,7 @@ public enum GameState {
     INGAME_WALK,
     INGAME_TALK,
     INGAME_TRADE,
+    INGAME_TURNEND,
     PAUSE,
     GAMEENDING,
     GAMEOVER

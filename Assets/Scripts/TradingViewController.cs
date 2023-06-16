@@ -3,7 +3,6 @@ using TMPro;
 
 public class TradingViewController : MonoBehaviour {
     [SerializeField] private TMPro.TMP_Text text;
-    [SerializeField] private TextMeshProUGUI test;
 
     private void Start() {
         // text.SetText("はろーわーるど！");

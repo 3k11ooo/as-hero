@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Tilemaps;
 
 public class GamaManager : MonoBehaviour {
     //  参照しましょう
@@ -12,31 +13,36 @@ public class GamaManager : MonoBehaviour {
     [SerializeField] private TradeManager tradeManagerScript;
     [SerializeField] private KeyInputManager keyInputManager;
     [SerializeField] private KeyInputManager keyInputManagerEvent;
-    [SerializeField] private Canvas _startUi;
-    [SerializeField] private Canvas _talkUi;
-    [SerializeField] private Canvas _tradeUi;
+    [SerializeField] private UiManager uiManagerScript;
+    [SerializeField] private Tilemap tilemap;
 
 
 
     private GameData gameData = new GameData();
+    private GameState overlapNextState;
+    private bool overlap;
+    private bool isOnce = false;
+    private int turnCount = 0;
 
     private void Awake() {
         DontDestroyOnLoad(this);
         SceneInitManagement();
         initTradeTextData();
+        // StateManage(GameState.INGAME_TRADE);
         StateManage(GameState.GAMESTART);
         SubscribeToEvent(keyInputManagerEvent);
         keyInputManager.initKeyInputManager();
     }
 
-
-    public void GetKeyInput(KeyCode code) {
+    // update
+    public void GameManagerUpdate(KeyCode code) {
         // 管理
         switch(gameData.NowGameState) {
             case GameState.GAMESTART :
                 keyInputManager.StartGame(code);
                 break;
             case GameState.INGAME_WALK :
+                overlap = OverlapCheck();
                 keyInputManager.Walk(code);
                 break;
             case GameState.INGAME_TRADE :
@@ -49,78 +55,61 @@ public class GamaManager : MonoBehaviour {
                 break;
             case GameState.GAMEOVER :
                 break; 
+            case GameState.INGAME_TURNEND :
+                break;
             default:
                 break;
         }
     }
 
-
+    // Scene管理
     private void SceneInitManagement() {
         switch (gameData.NowSceneState) {
             case SceneState.HOME:
-                playerControllerScript.init(new Vector2(3f, -3f));
+                playerControllerScript.init(new Vector2(-3.7f, 0.5f));
                 break;
         }
         Debug.Log(gameData.NowSceneState);
     }
-
+    // state 管理
     private void StateManage(GameState nextState) {
         gameData.NowGameState = nextState;
-        ManageUI();
+        uiManagerScript.ManageUI(gameData.NowGameState);
+        uiManagerScript.TurnViewController(turnCount, gameData.TurnData);
         Debug.Log(gameData.NowGameState);
     }
 
-    // 取引の顔面管理
+    // 取引の画面管理
     private void initTradeTextData() {
-        tradeManagerScript.LoadTextData("tradeBrand");
+        tradeManagerScript.init();
     }
 
-    // UI管理
-    private void ManageUI() {
-        switch(gameData.NowGameState) {
-            case GameState.GAMESTART :
-                _startUi.enabled = true;
-                _talkUi.enabled = false;
-                _tradeUi.enabled = false;
+    // playerとオブジェクトの重なり判定
+    private bool OverlapCheck() {
+        Vector3Int cellPosition = tilemap.WorldToCell(playerControllerScript.PlayerData.PlayerPos);
+
+        TileBase tile = tilemap.GetTile(cellPosition);
+        switch (cellPosition.y)
+        {
+            case 3:
+                uiManagerScript.InGameUIControl(tile, "しんぶんをみる");
+                overlapNextState = GameState.INGAME_TALK;
                 break;
-            case GameState.INGAME_WALK :
-                _startUi.enabled = false;
-                _talkUi.enabled = false;
-                _tradeUi.enabled = false;
+            case -3:
+                uiManagerScript.InGameUIControl(tile, "パソコンをみる");
+                overlapNextState = GameState.INGAME_TRADE;
                 break;
-            case GameState.INGAME_TRADE :
-                _startUi.enabled = false;
-                _talkUi.enabled = false;
-                _tradeUi.enabled = true;
+            case 0 :
+                uiManagerScript.InGameUIControl(tile, "ねる");
+                overlapNextState = GameState.INGAME_TURNEND;
                 break;
-            case GameState.INGAME_TALK :
-                _startUi.enabled = false;
-                _talkUi.enabled = true;
-                _tradeUi.enabled = false;
-                break;
-            case GameState.GAMEENDING :
-                _startUi.enabled = false;
-                _talkUi.enabled = false;
-                _tradeUi.enabled = false;
-                break;
-            case GameState.PAUSE :
-                _startUi.enabled = false;
-                _talkUi.enabled = false;
-                _tradeUi.enabled = false;
-                break;
-            case GameState.GAMEOVER :
-                _startUi.enabled = false;
-                _talkUi.enabled = false;
-                _tradeUi.enabled = false;            
-                break; 
             default:
-                _startUi.enabled = false;
-                _talkUi.enabled = false;
-                _tradeUi.enabled = false;
+                uiManagerScript.InGameUIControl(tile, "");
+                overlapNextState = GameState.INGAME_WALK;
                 break;
         }
+        return tile;
     }
-
 
     // input managerからのイベント取得
     private void SubscribeToEvent(KeyInputManager eventHolder) {
@@ -144,6 +133,7 @@ public class GamaManager : MonoBehaviour {
                 PlayerMoveController(code);
                 break;
             case GameState.INGAME_TRADE :
+                tradeManagerScript.PlayerTradeController(code);
                 break;
             case GameState.INGAME_TALK :
                 break;
@@ -158,7 +148,7 @@ public class GamaManager : MonoBehaviour {
         }
     }
 
-    // walk
+    // walk input
     private void PlayerMoveController(KeyCode code) {
         switch (code) {
             case KeyCode.W:
@@ -173,9 +163,38 @@ public class GamaManager : MonoBehaviour {
             case KeyCode.D:
                 playerControllerScript.PlayerMoveRight();
                 break;
+            case KeyCode.Space:
+                if (overlap == true && overlapNextState == GameState.INGAME_TURNEND) {
+                    StartCoroutine("TurnEnd"); 
+                }
+                else if (overlap == true) {
+                    StateManage(overlapNextState);
+                }
+                break;
             default:
                 break;
         }
     }
+    // turn end input
+    private void TurnManage() {
+        if (isOnce == false) {
+            turnCount++;
+            isOnce = true;
+            uiManagerScript.TurnEndViewControl(true);
+        }
+    }
 
+    IEnumerator TurnEnd() {
+        //終わるまで待ってほしい処理を書く
+        StateManage(GameState.INGAME_TURNEND);
+        TurnManage();
+    
+        //3秒待つ
+        yield return new WaitForSeconds(3);
+    
+        //再開してから実行したい処理を書く
+        isOnce = false;
+        StateManage(GameState.INGAME_WALK);
+        uiManagerScript.TurnEndViewControl(false);
+    } 
 }

@@ -2,33 +2,31 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class KeyInputManager : MonoBehaviour  {
-    private KeyInputStart start = new KeyInputStart();
-    private KeyInputWalk walk = new KeyInputWalk();
+    // private KeyInputStart start = new KeyInputStart();
+    // private KeyInputWalk walk = new KeyInputWalk();
     private int count;
 
     public UnityEvent<KeyCode> GameStartEvent = new UnityEvent<KeyCode>();
 
     public void initKeyInputManager() {
-        // SubscribeToStartGameEvent(start);
-        
         count = 0;
     }
 
     public void StartGame(KeyCode code) {
         if (count == 0 && code == KeyCode.Space) {
-            // start.KeyManaged(code);
             GameStartEvent.Invoke(code);
             count++;
         }
     }
     public void Walk(KeyCode code) {
-        if (code == KeyCode.W || code == KeyCode.A || code == KeyCode.S || code == KeyCode.D) {
-            // walk.KeyManaged(code);
+        if (code == KeyCode.W || code == KeyCode.A || code == KeyCode.S || code == KeyCode.D || code == KeyCode.Space) {
             GameStartEvent.Invoke(code);
         }
     }
     public void Trade(KeyCode code) {
-
+        if (code == KeyCode.Keypad1 || code == KeyCode.Keypad2 || code == KeyCode.Keypad3 || code == KeyCode.Keypad4 || code == KeyCode.Space) {
+            GameStartEvent.Invoke(code);
+        }
     }
 
 
